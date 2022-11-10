@@ -18,7 +18,8 @@
 using namespace std;
 
 
-typedef int StackElement;
+
+template<class StackElement>
 
 class LLStack
 {
@@ -126,4 +127,78 @@ private:
 }; // end of class declaration
 
 
-
+//cpp
+template<class StackElement>
+LLStack<StackElement>::LLStack() :myTop(0)
+{
+}
+template<class StackElement>
+LLStack<StackElement>::LLStack(const LLStack<StackElement>& original)
+{
+	if (original.myTop == NULL) { return; };
+	this->myTop = new Node(original.myTop->data);
+	Node* thisptr = this->myTop;
+	for (Node* i = original.myTop->next; i != NULL; i = i->next)
+	{
+		Node* ptr = new Node(i->data);
+		thisptr->next = ptr;
+		thisptr = thisptr->next;
+	}
+}
+template<class StackElement>
+LLStack<StackElement>::~LLStack()
+{
+	for (Node* i = myTop; i != 0; i = myTop)
+	{
+		myTop = myTop->next;
+		delete i;
+	}
+}
+template<class StackElement>
+const LLStack<StackElement>& LLStack<StackElement>::operator=(const LLStack& rightHandSide)
+{
+	if (this != &rightHandSide)
+	{
+		this->~LLStack();
+		if (rightHandSide.myTop == NULL) { return *this; };
+		this->myTop = new Node(rightHandSide.myTop->data);
+		Node* thisptr = this->myTop;
+		for (Node* i = rightHandSide.myTop->next; i != NULL; i = i->next)
+		{
+			Node* ptr = new Node(i->data);
+			thisptr->next = ptr;
+			thisptr = thisptr->next;
+		}
+	}
+	return *this;
+}
+template<class StackElement>
+bool LLStack<StackElement>::empty() const
+{
+	return myTop == NULL;
+}
+template<class StackElement>
+void LLStack<StackElement>::push(const StackElement& value)
+{
+	Node* ptr = new Node(value);
+	ptr->next = myTop;
+	myTop = ptr;
+}
+template<class StackElement>
+void LLStack<StackElement>::display(ostream& out) const
+{
+	for (Node* i = myTop; i != 0; i = i->next) {
+		out << i->data << " ";
+	}
+	out << endl;
+}
+template<class StackElement>
+StackElement LLStack<StackElement>::top() const
+{
+	return myTop->data;
+}
+template<class StackElement>
+void LLStack<StackElement>::pop()
+{
+	myTop = myTop->next;
+}

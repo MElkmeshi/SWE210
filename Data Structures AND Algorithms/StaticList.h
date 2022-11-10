@@ -20,8 +20,7 @@ using namespace std;
 #define STATICLIST
 
 const int CAPACITY = 1024;
-typedef int ElementType;
-
+template <class ElementType>
 class StaticList
 {
 
@@ -90,6 +89,46 @@ public:
 }; //--- end of List class
 
 //------ Prototype of output operator
-ostream& operator<< (ostream& out, const StaticList& aList);
+template <class ElementType>
+ostream& operator<< (ostream& out, const StaticList<ElementType>& aList);
 
 #endif
+// cpp
+template <class ElementType>
+StaticList<ElementType>::StaticList() :mySize(0)
+{
+}
+template <class ElementType>
+bool StaticList<ElementType>::empty() const
+{
+    return this->mySize == 0;
+}
+template <class ElementType>
+void StaticList<ElementType>::insert(ElementType item, int pos)
+{
+    this->myArray[pos] = item; this->mySize++;
+}
+template <class ElementType>
+void StaticList<ElementType>::erase(int pos)
+{
+    mySize--;
+    for (int i = pos; i < this->mySize; i++)
+    {
+        this->myArray[i] = this->myArray[i + 1];
+    }
+}
+template <class ElementType>
+void StaticList<ElementType>::display(ostream& out) const
+{
+    for (int i = 0; i < this->mySize; i++)
+    {
+        out << this->myArray[i] << " ";
+    }
+    cout << endl;
+}
+template <class ElementType>
+ostream& operator<<(ostream& out, const StaticList<ElementType>& aList)
+{
+    aList.display(out);
+    return out;
+}
