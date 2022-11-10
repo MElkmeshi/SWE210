@@ -24,7 +24,7 @@
 #include <iostream>
 using namespace std;
 
-typedef int ElementType;
+template<class Elemntype>
 class DynamicList
 {
 public:
@@ -82,6 +82,7 @@ public:
 
      /***** empty operation *****/
     bool empty() const;
+   
     /*----------------------------------------------------------------------
     Check if a list is empty.
 
@@ -90,7 +91,7 @@ public:
     -----------------------------------------------------------------------*/
 
     /***** insert and erase *****/
-    void insert(ElementType item, int pos);
+    void insert(Elemntype item, int pos);
     /*----------------------------------------------------------------------
      Insert a value into the list at a given position.
 
@@ -126,13 +127,91 @@ private:
     /******** Data Members ********/
     int mySize;                // current size of list
     int myCapacity;            // capacity of array
-    ElementType* myArray;     // pointer to dynamic array
+    Elemntype* myArray;     // pointer to dynamic array
 
 }; //--- end of List class
 
 //------ Prototype of output operator
-ostream& operator<< (ostream& out, const DynamicList& aList);
+template<class Elemntype>
+ostream& operator<< (ostream& out, const DynamicList<Elemntype>& aList);
 
 
+//cpp
+template<class Elemntype>
+DynamicList<Elemntype>::DynamicList(int maxSize) :mySize(0), myCapacity(maxSize)
+{
+    this->myArray = new Elemntype[this->myCapacity];
+}
+template<class Elemntype>
+DynamicList<Elemntype>::~DynamicList()
+{
+    delete this->myArray;
+}
+template<class Elemntype>
+DynamicList<Elemntype>::DynamicList(const DynamicList& origList) :mySize(origList.mySize), myCapacity(origList.myCapacity)
+{
+    this->myArray = new Elemntype[this->myCapacity];
+    for (int i = 0; i < origList.mySize; i++)
+        this->myArray[i] = origList.myArray[i];
 
-
+}
+template<class Elemntype>
+const DynamicList<Elemntype>& DynamicList<Elemntype>::operator=(const DynamicList<Elemntype>& rightHandSide)
+{
+    if (this != &rightHandSide)
+    {
+        if (this->myCapacity != rightHandSide.myCapacity)
+        {
+            this->~DynamicList();
+            this->myArray = new Elemntype[rightHandSide.myCapacity];
+        }
+        for (int i = 0; i < rightHandSide.mySize; i++)
+            this->myArray[i] = rightHandSide.myArray[i];
+    }
+    return *this;
+}
+template<class Elemntype>
+DynamicList<Elemntype> DynamicList<Elemntype>::operator+(const DynamicList<Elemntype>& aList1)
+{
+    DynamicList tmpList;
+    for (int i = 0; i < this->mySize; i++)
+        tmpList.myArray[i] = this->myArray[i];
+    for (int i = 0; i < aList1.mySize; i++)
+        tmpList.myArray[i + this->mySize] = aList1.myArray[i];
+    tmpList.mySize = this->mySize + aList1.mySize;
+    return tmpList;
+}
+template<class Elemntype>
+bool DynamicList<Elemntype>::empty() const
+{
+    return this->mySize == 0;
+}
+template<typename Elemntype>
+void DynamicList<Elemntype>::insert(Elemntype item, int pos)
+{
+    this->myArray[pos] = item; this->mySize++;
+}
+template<class Elemntype>
+void DynamicList<Elemntype>::erase(int pos)
+{
+    mySize--;
+    for (int i = pos; i < this->mySize; i++)
+    {
+        this->myArray[i] = this->myArray[i + 1];
+    }
+}
+template<class Elemntype>
+void DynamicList<Elemntype>::display(ostream& out) const
+{
+    for (int i = 0; i < this->mySize; i++)
+    {
+        out << this->myArray[i] << " ";
+    }
+    cout << endl;
+}
+template<class Elemntype>
+inline ostream& operator<<(ostream& out, const DynamicList<Elemntype>& aList)
+{
+    aList.display(out);
+    return out;
+}

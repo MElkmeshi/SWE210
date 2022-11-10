@@ -16,7 +16,8 @@
 #include <iostream>
 using namespace std;
 
-typedef int QueueElement;
+
+template<class QueueElement>
 
 class LLQueue
 {
@@ -138,3 +139,87 @@ private:
 
 
 
+//cpp
+template<class QueueElement>
+LLQueue<QueueElement>::LLQueue() :myBack(0), myFront(0)
+{
+}
+template<class QueueElement>
+LLQueue<QueueElement>::LLQueue(const LLQueue& original)
+{
+	if (original.empty()) { return; }
+	this->myFront = new Node(original.myFront->data);
+	Node* frontPtr = this->myFront;
+	for (Node* i = original.myFront->next; i != NULL; i = i->next)
+	{
+		Node* ptr = new Node(i->data);
+		frontPtr->next = ptr;
+		frontPtr = frontPtr->next;
+	}
+	this->myBack = frontPtr;
+}
+template<class QueueElement>
+LLQueue<QueueElement>::~LLQueue()
+{
+	for (Node* i = myFront; i != NULL; i = myFront) {
+		myFront = myFront->next;
+		delete i;
+	}
+}
+template<class QueueElement>
+const LLQueue<QueueElement>& LLQueue<QueueElement>::operator=(const LLQueue<QueueElement>& rightHandSide)
+{
+	if (this != &rightHandSide)
+	{
+		if (rightHandSide.empty()) { return *this; }
+		this->~LLQueue();
+		this->myFront = new Node(rightHandSide.myFront->data);
+		Node* frontPtr = this->myFront;
+		for (Node* i = rightHandSide.myFront->next; i != NULL; i = i->next)
+		{
+			Node* ptr = new Node(i->data);
+			frontPtr->next = ptr;
+			frontPtr = frontPtr->next;
+		}
+		this->myBack = frontPtr;
+	}
+	return *this;
+}
+template<class QueueElement>
+bool LLQueue<QueueElement>::empty() const
+{
+	return myFront == NULL;
+}
+template<class QueueElement>
+void LLQueue<QueueElement>::enqueue(const QueueElement& value)
+{
+	Node* ptr = new Node(value);
+	if (myFront == NULL) {
+		myBack = myFront = ptr;
+	}
+	else
+	{
+		myBack->next = ptr;
+		myBack = ptr;
+	}
+}
+template<class QueueElement>
+void LLQueue<QueueElement>::display(ostream& out) const
+{
+	for (Node* i = myFront; i != NULL; i = i->next)
+		out << i->data << " ";
+	out << endl;
+}
+template<class QueueElement>
+QueueElement LLQueue<QueueElement>::front() const
+{
+	return myFront->data;
+}
+template<class QueueElement>
+void LLQueue<QueueElement>::dequeue()
+{
+	if (myFront == NULL)
+		return;
+	else
+		myFront = myFront->next;
+}
