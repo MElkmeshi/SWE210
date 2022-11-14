@@ -6,7 +6,7 @@
 #include "LLStack.h"
 #include "LLQueue.h"
 #include <algorithm>
-#include <unordered_map>a
+#include <unordered_map>
 const int SIZE = 108;
 
 int main()
@@ -24,7 +24,7 @@ int main()
 		}
 		for (int i = 0; i < numofplayers; i++) {
 			for (int j = 0; j < 7; j++, deckstack.pop())
-				p[i].insert(deckstack.top());
+				p[i].add(deckstack.top());
 			cout << "Player " << i + 1 << " cards:" << p[i];
 		}
 		currentelement = deckstack.top();
