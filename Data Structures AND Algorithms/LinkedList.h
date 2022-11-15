@@ -78,6 +78,7 @@ public:
      Postcondition: true is returned if this list is empty, false if not.
      --------------------------------------------------------------------*/
     void insert(ElementType dataVal, int index);
+    void add(ElementType dataVal);
     /*--------------------------------------------------------------------
      Insert a value into a list at a given index.
      Precondition:  index is a valid list index: 0 <= index <= mySize,
@@ -183,6 +184,11 @@ void LinkedList<ElementType>::insert(ElementType dataVal, int index)
         fir->next = ptr;
     }
     mySize++;
+}
+template<class ElementType>
+inline void LinkedList<ElementType>::add(ElementType dataVal)
+{
+    this->insert(dataVal, this->mySize);
 }
 template <class ElementType>
 void LinkedList<ElementType>::erase(int index)
